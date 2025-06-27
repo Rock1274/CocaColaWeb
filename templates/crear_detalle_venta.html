@@ -1,0 +1,71 @@
+<div class="container mt-5">
+    <div class="modal fade" id="crearDetVentaModal" tabindex="-1" aria-labelledby="crearVentaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white text-center">
+                    <h5 class="modal-title">Agregar Detalle de Venta</h5>
+                    <button type="button" class="btn-close white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="id_venta" class="form-label">Venta</label>
+                            <input type="number" name="id_venta" id="id_venta" class="form-control" min="1"
+                                max="{{ max_id_venta }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paquete_id" class="form-label">Producto</label>
+                            <select class="form-select" id="paquete_id" name="paquete_id" required>
+                                <option selected disabled>Seleccione un producto</option>
+                                {% for paquete in paquetes %}
+                                <option value="{{ paquete.Id_Paquete }}" data-inventario="{{ paquete.Inventario }}" 
+                                    data-paquetes="{{ paquete.PaquetesCompletos }}" data-unidades="{{ paquete.UnidadesSobrantes }}">
+                                    {{ paquete.Descripcion }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted" id="inventario-actual">
+                                Seleccione un paquete para ver el inventario.
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paquetes_finales" class="form-label">Paquetes Finales</label>
+                            <input type="number" class="form-control" id="paquetes_finales" name="paquetes_finales"
+                                min="0" max="" required>
+                            <small class="form-text text-muted" id="inventario-paq"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="unidades_finales" class="form-label">Unidades</label>
+                            <input type="number" class="form-control" id="unidades_finales" name="unidades_finales"
+                                min="0" max="" required>
+                            <small class="form-text text-muted" id="inventario-und"></small>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('paquete_id').addEventListener('change', function () {
+        var selected = this.options[this.selectedIndex];
+        var inventario_paqt = selected.getAttribute('data-paquetes');
+        var inventario_unid = selected.getAttribute('data-unidades');
+        var inventario = selected.getAttribute('data-inventario');
+        document.getElementById('inventario-actual').textContent = 'Inventario: ' + inventario;
+        document.getElementById('inventario-paq').textContent = 'Inventario en paquetes: ' + inventario_paqt;
+        document.getElementById('inventario-und').textContent = 'Inventario en unidades: ' + inventario_unid;
+        // actualizar el atributo max del input de paquetes e inventario
+        document.getElementById('paquetes_finales').max = inventario_paqt;
+        document.getElementById('unidades_finales').max = inventario_unid;
+    });
+</script>

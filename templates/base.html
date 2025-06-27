@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MiniBodega</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+    <!-- Botón visible solo en móviles -->
+    <div class="all">
+        <button class="toggle-button d-md-none" onclick="toggleSidebar()">☰</button>
+
+        <div class="sidebar collapsed">
+            <h2>
+                <img src="/static/SideBar/menu.svg" id="menu" alt="Inicio" onclick="toggleSidebar()"
+                    style="cursor:pointer;" />
+                <a href="{{ url_for('index') }}" class="sidebar-title"
+                    style="cursor: pointer; text-decoration: none; color: inherit;">
+                    Mini Bodega
+                </a>
+            </h2>
+            <a href="{{ url_for('ver_paquetes') }}" class="botones">
+                <img src="/static/SideBar/Coke.svg" alt="Productos" />
+                <span class="sidebar-text">Productos</span>
+            </a>
+            <a href="{{ url_for('ver_detalles_ventas') }}" class="botones">
+                <img src="/static/SideBar/Venta.svg" alt="Ventas" />
+                <span class="sidebar-text">Detalles de Ventas</span>
+            </a>
+            <a href="{{ url_for('ver_detalles_compras') }}" class="botones">
+                <img src="/static/SideBar/Compra.svg" alt="Compras" />
+                <span class="sidebar-text">Detalles de Compras</span>
+            </a>
+            <a href="{{ url_for('ver_empleados') }}" class="botones">
+                <img src="/static/SideBar/Personal.svg" alt="Empleados" />
+                <span class="sidebar-text">Empleados</span>
+            </a>
+
+            <div class="sidebar-spacer"></div>
+
+            <!-- Aquí está el cambio: botón que abre modal -->
+            <a href="#" id="btnCerrarSesion" class="logout">
+                <img src="/static/SideBar/log out.svg" alt="Cerrar Sesión" width="35" height="35" />
+                <span class="sidebar-text">Cerrar Sesión</span>
+            </a>
+
+            <div class="sidebar-footer">
+                <img src="/static/SideBar/CocaCola.png" alt="Logo" />
+            </div>
+        </div>
+
+        <div class="content">
+            {% block styles %} {% endblock %}
+            {% block content %} {% endblock %}
+
+        </div>
+
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.querySelector('.sidebar');
+                // Para móviles: abre o cierra usando clase `open`
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('open');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                }
+            }
+
+            //Para que no se buguee cuando rote el dispositivo
+            function restoreSidebarOnRotate() {
+                const sidebar = document.querySelector('.sidebar');
+
+                if (window.innerWidth <= 768) {
+                    // En móviles, restaurar sin collapsed
+                    sidebar.classList.remove('collapsed');
+                } else {
+                    // En escritorio, forzar siempre collapsed
+                    sidebar.classList.add('collapsed');
+                }
+
+                // Eliminar 'open' para escritorio también
+                sidebar.classList.remove('open');
+            }
+
+            // Ejecutar al cargar y cuando cambie el tamaño/orientación
+            window.addEventListener('resize', restoreSidebarOnRotate);
+            window.addEventListener('orientationchange', restoreSidebarOnRotate);
+            // Ejecutar una vez al cargar la página
+            window.addEventListener('DOMContentLoaded', restoreSidebarOnRotate);
+
+
+            // Para reiniciar los modales al cerrarlos
+            document.addEventListener('DOMContentLoaded', function () {
+                // Selecciona todos los modals
+                var modals = document.querySelectorAll('.modal');
+                const sidebar = document.querySelector('.sidebar');
+
+
+                modals.forEach(function (modal) {
+                    modal.addEventListener('hidden.bs.modal', function () {
+                        // Resetea todos los formularios dentro del modal cerrado
+                        var forms = modal.querySelectorAll('form');
+                        forms.forEach(function (form) {
+                            form.reset();
+                        });
+                        document.getElementById('inventario-actual').textContent = 'Seleccione un paquete para ver el inventario.';
+                        document.getElementById('inventario-paq').textContent = '';
+                        document.getElementById('inventario-und').textContent = '';
+                    });
+                });
+
+                // Si está en escritorio, cerrar siempre al cargar
+                if (window.innerWidth > 768) {
+                    sidebar.classList.add('collapsed');
+                }
+            });
+
+            // Abrir modal al click en "Cerrar Sesión"
+            document.getElementById('btnCerrarSesion').addEventListener('click', function (e) {
+                e.preventDefault(); // Evita que el enlace navegue
+                var logoutModal = new bootstrap.Modal(document.getElementById('confirmLogoutModal'));
+                logoutModal.show();
+            });
+        </script>
+
+    </div>
+
+    <!-- Modal para confirmar cierre de sesión -->
+    <div class="modal fade" id="confirmLogoutModal" tabindex="-1" aria-labelledby="confirmLogoutLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmLogoutLabel">Confirmar cierre de sesión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas cerrar sesión?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger">Sí, cerrar sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

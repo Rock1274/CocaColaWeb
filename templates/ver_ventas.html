@@ -1,0 +1,35 @@
+<div class="container mt-5">
+    <div class="modal fade" id="VerVentaModal" tabindex="-1" aria-labelledby="VerVentaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title mx-auto h5_Ver">Listado de Ventas</h5>
+                    <button type="button" class="btn-close white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped shadow-sm">
+                            <thead class="table-dark text-center">
+                                <tr>
+                                    <th>Venta</th>
+                                    <th>Fecha de Venta</th>
+                                    <th>TotalVenta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for venta in ventas %}
+                                <tr class="text-center">
+                                    <td>{{ venta.Id_Venta }}</td>
+                                    <td>{{ venta.Fecha }}</td>
+                                    <td>{{ venta.TotalVenta }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .centered-card {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-container {
+    margin: 30px 0 !important;
+    }
+</style>
+<div class="centered-card">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 card-container">
+        <div class="card shadow-lg rounded border-0">
+            <div class="card-header bg-dark text-white text-center">
+                <h5 class="mb-0">Editar Empleado</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="nombres" class="form-label">Nombres</label>
+                        <input type="text" name="nombres" id="nombres" class="form-control" value="{{ empleado.Nombres }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellidos" class="form-label">Apellidos</label>
+                        <input type="text" name="apellidos" id="apellidos" class="form-control" value="{{ empleado.Apellidos }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" value="{{ empleado.FechaDeNacimiento }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_contrato" class="form-label">Fecha de Contrato</label>
+                        <input type="date" name="fecha_contrato" id="fecha_contrato" class="form-control" value="{{ empleado.FechaDeContrato }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" name="direccion" id="direccion" class="form-control" value="{{ empleado.Direccion }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="region" class="form-label">Región</label>
+                        <input type="text" name="region" id="region" class="form-control" value="{{ empleado.Region }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="supervisor" class="form-label">Supervisor</label>
+                        <select name="supervisor" id="supervisor" class="form-select">
+                            <option value="">Sin supervisor</option>
+                            {% for s in supervisores %}
+                            <option value="{{ s.Id_Empleado }}" {% if empleado.Supervisor == s.Id_Empleado %}selected{% endif %}>
+                                {{ s.Nombres }} {{ s.Apellidos }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Actualizar</button>
+                        <a href="{{ url_for('ver_empleados') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

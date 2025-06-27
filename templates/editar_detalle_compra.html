@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .centered-card {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+<div class="centered-card">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+        <div class="card shadow-lg rounded border-0">
+            <div class="card-header bg-dark text-white text-center">
+                <h5 class="mb-0">Editar Detalle de Compra</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post">
+
+                    <div class="mb-3">
+                        <label for="Id_Compra" class="form-label">Compra</label>
+                        <input type="number" name="Id_Compra" id="Id_Compra" class="form-control" value="{{ detalle.Id_Compra }}" min="1" max="{{ max_id_compra }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Id_Paquete" class="form-label">Producto</label>
+                        <select name="Id_Paquete" id="Id_Paquete" class="form-select" required>
+                            {% for p in paquetes %}
+                                <option value="{{ p.Id_Paquete }}" {% if p.Id_Paquete == detalle.Id_Paquete %}selected{% endif %}>
+                                    {{ p.Descripcion }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Cantidad" class="form-label">Cantidad</label>
+                        <input type="number" name="Cantidad" id="Cantidad" class="form-control" value="{{ detalle.Cantidad }}" required>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="{{ url_for('ver_detalles_compras') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

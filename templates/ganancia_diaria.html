@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-success text-center">Ganancia Diaria</h2>
+
+    <div class="mb-4">
+        <form method="post" action="{{ url_for('calcular_ganancia', id_venta=ventas[0].Id_Venta) }}">
+            <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                    <label for="venta_id" class="col-form-label">Calcular ganancia para Venta:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="id_venta" id="venta_id" class="form-select" onchange="this.form.action = '/calcular_ganancia/' + this.value;">
+                        {% for venta in ventas %}
+                        <option value="{{ venta.Id_Venta }}">{{ venta.Id_Venta }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Calcular Ganancia</button>
+                </div>
+
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#graficoModal">
+                    Ver Gráfico
+                   </button>
+               </div>
+
+                <div>
+                    <a href="{{ url_for('ver_detalles_ventas') }}" class="btn btn-info">
+                        Volver
+                     </a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle shadow-sm">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Venta</th>
+                    <th>Fecha</th>
+                    <th>Total Venta</th>
+                    <th>Ganancia Calculada</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in ganancias %}
+                <tr class="text-center">
+                    <td>{{ g.Id_Venta }}</td>
+                    <td>{{ g.Fecha }}</td>
+                    <td>C${{ g.TotalVenta }}</td>
+                    <td>C${{ g.GananciaCalculada }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="graficoModal" tabindex="-1" aria-labelledby="graficoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="graficoModalLabel">Ganancia por Fecha</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <canvas id="graficoLinea" height="100"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fechas = JSON.parse('{{ fechas | tojson | safe }}');
+    const valores = JSON.parse('{{ valores | tojson | safe }}');
+
+    const ctx = document.getElementById('graficoLinea').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Ganancia por Fecha',
+                data: valores,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'C$' + context.parsed.y;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'C$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+
+{% endblock %}

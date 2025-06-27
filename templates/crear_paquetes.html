@@ -1,0 +1,68 @@
+<!-- Modal -->
+<div class="container mt-5">
+    <div class="modal fade" id="crearPaqueteModal" tabindex="-1" aria-labelledby="crearPaqueteLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white text-center">
+                    <h5 class="modal-title" id="crearPaqueteLabel">Agregar Nuevo Paquete</h5>
+                    <button type="button" class="btn-close white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Producto</label>
+                            <input type="text" class="form-control" id="descripcion" name="Descripcion" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo de Paquete</label>
+                            <select class="form-select" id="tipo" name="TipoPaquete" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="6">6 unidades</option>
+                                <option value="8">8 unidades</option>
+                                <option value="12">12 unidades</option>
+                                <option value="24">24 unidades</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="inventario" class="form-label">Inventario</label>
+                            <input type="number" step="0.001" class="form-control" id="inventario" name="Inventario">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="UnidadesSobrantes" class="form-label">Unidades Sobrantes </label>
+                            <input type="number" step="1" class="form-control" id="UnidadesSobrantes" name="UnidadesSobrantes">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio_compra" class="form-label">Paquetes Completos</label>
+                            <input type="number" step="1" class="form-control" id="PaquetesCompletos" name="PaquetesCompletos">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio_compra" class="form-label">Precio de Compra</label>
+                            <input type="number" step="0.01" class="form-control" id="precio_compra" name="PrecioCompra_Paq">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="precio_compra" class="form-label">Precio de Venta</label>
+                            <input type="number" step="0.01" class="form-control" id="precio_venta" name="PrecioVenta_Paq">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="imagen" class="form-label">Imagen del Producto</label>
+                            <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*">
+                        </div>
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

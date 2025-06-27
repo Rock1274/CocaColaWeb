@@ -1,0 +1,44 @@
+
+<div class="container mt-5">
+
+    <!-- Modal -->
+    <div class="modal fade" id="crearCompraModal" tabindex="-1" aria-labelledby="crearCompraLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white text-center">
+                    <h5 class="modal-title" id="crearCompraLabel">Agregar Detalle de Compra</h5>
+                    <button type="button" class="btn-close white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="id_compra" class="form-label">Compra</label>
+                            <input type="number" value="1" name="id_compra" id="id_compra" class="form-control" min="1" max="{{ max_id_compra }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="paquete_id" class="form-label">Producto</label>
+                            <select class="form-select" id="paquete_id" name="paquete_id" required>
+                                <option selected disabled>Seleccione un paquete</option>
+                                {% for paquete in paquetes %}
+                                <option value="{{ paquete.Id_Paquete }}">{{ paquete.Descripcion }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="cantidad" class="form-label">Cantidad:</label>
+                            <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

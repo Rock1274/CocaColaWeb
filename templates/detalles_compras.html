@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .btn-info{
+        border: 0;
+        color: #fff;
+        background-color: rgb(13, 110, 253);
+    }
+    .btn-info:hover{
+        color: #fff;
+        background-color: rgb(8, 69, 160);
+    }
+</style>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center text-primary">Detalles de Compras</h1>
+    
+    <form method="get" action="{{ url_for('ver_detalles_compras') }}" class="row row-cols-lg-auto g-2 align-items-center mb-4">
+        <!-- Input: Buscar por producto -->
+        <div class="col">
+            <input type="text" class="form-control" name="producto" placeholder="Buscar por producto"
+                value="{{ request.args.get('producto', '') }}">
+        </div>
+    
+        <!-- Input: Buscar por ID de compra -->
+        <div class="col">
+            <input type="text" class="form-control" name="id_compra" placeholder="Buscar por Compra"
+                value="{{ request.args.get('id_compra', '') }}">
+        </div>
+    
+        <!-- Botón: Buscar -->
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    
+        <!-- Botón: Ver Todos -->
+        {% if request.args.get('producto') or request.args.get('id_compra') %}
+        <div class="col">
+            <a href="{{ url_for('ver_detalles_compras') }}" class="btn btn-secondary">Ver Todos</a>
+        </div>
+        {% endif %}
+    </form>
+    
+    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+        <!-- Botón para abrir modal -->
+        <div>
+            <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearCompraModal">
+                Agregar Detalle de Compra
+            </a>
+            {% include 'crear_detalle_compra.html' %}
+        </div>
+
+        <div class="ms-auto">
+            <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#VerCompraModal">
+                Ver Compras
+            </a>
+            {% include 'ver_compras.html' %}
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle shadow-sm">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Compra</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Ant. Descuento</th>
+                    <th>Total Ant. Descuento</th>
+                    <th>Descuento Total</th>
+                    <th>Total Con Descuento</th>
+                    <th>Total Con IVA</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dc in detalles_compras %}
+                <tr>
+                    <td class="text-center">{{ dc.Id_Compra }}</td>
+                    <td>{{ dc.DescripcionPaquete }}</td>
+                    <td>{{ dc.Cantidad }}</td>
+                    <td>C${{ dc.PrecioAntDes }}</td>
+                    <td>C${{ dc.TotalAntDes }}</td>
+                    <td>C${{ dc.DescuentoTotal }}</td>
+                    <td>C${{ dc.TotalConDes }}</td>
+                    <td>C${{ dc.TotalConIva }}</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ url_for('editar_detalle_compra', id=dc.Id_DetalleDeCompra) }}"
+                                class="btn btn-sm btn-warning">Editar</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

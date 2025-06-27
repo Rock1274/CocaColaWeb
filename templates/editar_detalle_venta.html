@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .centered-card {
+        gap: 10px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-container {
+    margin: 30px 0 !important;
+}
+</style>
+<div class="centered-card">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 card-container">
+        <div class="card shadow-lg rounded border-0">
+            <div class="card-header bg-dark text-white text-center">
+                <h5 class="mb-0">Editar Detalle de Venta</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" action="{{ url_for('editar_detalle_venta', id=detalle.Id_DetalleVenta) }}">
+                    <div class="mb-3">
+                        <label for="id_venta" class="form-label">Venta</label>
+                        <input type="number" name="id_venta" id="id_venta" class="form-control" value="{{ detalle.Id_Venta }}" min="1" max="{{ max_id_venta }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="paquete_id" class="form-label">Producto</label>
+                        <select class="form-select" id="paquete_id" name="paquete_id" required>
+                                <option selected disabled>Seleccione un producto</option>
+                                {% for paquete in paquetes %}
+                                <option value="{{ paquete.Id_Paquete }}" data-inventario="{{ paquete.Inventario }}" 
+                                    data-paquetes="{{ paquete.PaquetesCompletos }}" data-unidades="{{ paquete.UnidadesSobrantes }}" 
+                                    {% if paquete.Id_Paquete == detalle.Id_Paquete %}selected{% endif %}>
+                                    {{ paquete.Descripcion }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted" id="inventario-actual">
+                                Seleccione un paquete para ver el inventario.
+                            </small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cantidad" class="form-label">Cantidad en Paquetes</label>
+                        <input type="number" class="form-control" id="cantidad" name="cantidad_paquetes" value="{{ detalle.CantidadPaquetes }}" min="0" 
+                        max="{{ (detalle.PaquetesCompletos|default(0)) + (detalle.CantidadPaquetes|default(0)) }}" required>
+                        <small class="form-text text-muted" id="inventario-paq"></small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="unidades_vendidas" class="form-label">Cantidad en Unidades</label>
+                        <input type="number" class="form-control" id="unidades_vendidas" name="cantidad_unidades" value="{{ detalle.CantidadUnidades }}" min="0" 
+                        max="{{ (detalle.PaquetesCompletos|default(0)) + (detalle.CantidadPaquetes|default(0)) }}" required>
+                        <small class="form-text text-muted" id="inventario-und"></small>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Guardar</button>
+                        <a href="{{ url_for('ver_detalles_ventas') }}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<script>
+    function actualizarInventarios() {
+        var select = document.getElementById('paquete_id');
+        var selected = select.options[select.selectedIndex];
+        var inventario_paqt = selected.getAttribute('data-paquetes');
+        var inventario_unid = selected.getAttribute('data-unidades');
+        var inventario = selected.getAttribute('data-inventario');
+        document.getElementById('inventario-actual').textContent = 'Inventario: ' + (inventario ?? '');
+        document.getElementById('inventario-paq').textContent = 'Inventario en paquetes: ' + (inventario_paqt ?? '');
+        document.getElementById('inventario-und').textContent = 'Inventario en unidades: ' + (inventario_unid ?? '');
+        /* // actualizar el atributo max del input de paquetes e inventario
+        document.getElementById('cantidad').max = inventario_paqt ?? '';
+        document.getElementById('unidades_vendidas').max = inventario_unid ?? ''; */
+    }
+
+    document.getElementById('paquete_id').addEventListener('change', actualizarInventarios);
+
+    // Ejecutar al cargar la página
+    window.addEventListener('DOMContentLoaded', function() {
+        actualizarInventarios();
+    });
+</script>
+{% endblock %}

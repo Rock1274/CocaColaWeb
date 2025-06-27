@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .zoom-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .zoom-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+    }
+</style>
+
+
+<div class="container mt-5">
+    <h1 class="mb-4 text-center text-success">Lista de Productos</h1>
+
+    <!-- Cuadro de búsqueda -->
+    <form method="get" action="{{ url_for('ver_paquetes') }}" class="row g-2 mb-4">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="busqueda" placeholder="Buscar por producto" value="{{ busqueda }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+        {% if busqueda %}
+        <div class="col-auto">
+            <a href="{{ url_for('ver_paquetes') }}" class="btn btn-secondary">Ver Todos</a>
+        </div>
+        {% endif %}
+    </form>
+
+    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+        <!-- Botón para agregar nuevo producto -->
+        <div>
+            <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearPaqueteModal">
+                Agregar Producto
+            </a>
+            {% include 'crear_paquetes.html' %}
+        </div>
+    </div>
+
+    <!-- Diccionario de imágenes basado en la descripción -->
+    {% set imagenes = {
+        '1.25 Litros': '/static/Paquetes/1.25 Litros.png',
+        '2Litros cc': '/static/Paquetes/2Litros cc.png',
+        '2Litros Sabor': '/static/Paquetes/2Litros Sabor.png',
+        '2Litros Té': '/static/Paquetes/2Litros Té.png',
+        '3Litros cc': '/static/Paquetes/3Litros cc.png',
+        '3Litros Sabor': '/static/Paquetes/3Litros Sabor.png',
+        '3Valle': '/static/Paquetes/3Valle.png',
+        '6.5 Onzas': '/static/Paquetes/6.5 Onzas.png',
+        '12 Onzas': '/static/Paquetes/12 Onzas.png',
+        '1/2Litro': '/static/Paquetes/12Litro.png',
+        '355ml Hic Té': '/static/Paquetes/355ml Hic Té.png',
+        '355ml': '/static/Paquetes/355ml.png',
+        '500ml Fuze': '/static/Paquetes/500ml Fuze.png',
+        '500ml': '/static/Paquetes/500ml.png',
+        'Alpina 2Litros': '/static/Paquetes/Alpina 2Litros.png',
+        'Alpina 600ml': '/static/Paquetes/Alpina 600ml.png',
+        'Alpina Litro': '/static/Paquetes/Alpina Litro.png',
+        'Fury Energy': '/static/Paquetes/Fury Energy.png',
+        'Hic': '/static/Paquetes/Hic.png',
+        'Lata': '/static/Paquetes/Lata.png',
+        'Litro Termo': '/static/Paquetes/Litro Termo.png',
+        'Litro': '/static/Paquetes/Litro.png',
+        'Mini latas': '/static/Paquetes/Mini latas.png',
+        'Power': '/static/Paquetes/Power.png',
+        'Retornable': '/static/Paquetes/Retornable.png',
+        'Té': '/static/Paquetes/Té.png',
+        'Valle 500ml': '/static/Paquetes/Valle 500ml.png',
+        'Valle 12 Onza': '/static/Paquetes/Valle 12 Onza.png',
+        'Default': '/static/img/Paquetes/default.png'
+    } %}
+
+    <!-- Colores personalizados para cada tarjeta -->
+    {% set colores = ['#e0f7fa', '#f1f8e9', '#fff8e1', '#fce4ec', '#e8eaf6', '#ede7f6', '#fbe9e7', '#e0f2f1', '#f9fbe7', '#f3e5f5'] %}
+
+    <!-- Tarjetas de productos -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for paquete in paquetes %}
+        {% set nombre_archivo = paquete.Descripcion.replace('/', '_').replace('\\', '_') ~ '.png' %}
+        {% set ruta_imagen = '/static/Paquetes/' ~ nombre_archivo %}
+        {% set imagen = ruta_imagen if nombre_archivo in lookup_files else '/static/img/Paquetes/default.png' %}
+        {% set color = colores[loop.index0 % colores|length] %}
+        <div class="col">
+            <div class="card h-100 text-center shadow-sm zoom-card" style="--bg: {{ color }}; background-color: var(--bg);">
+                <img src="{{ imagen }}" class="card-img-top" style="height: 300px; object-fit: contain;" alt="Imagen del producto">
+                <div class="card-body">
+                    <h5 class="card-title text-success">{{ paquete.Descripcion }}</h5>
+                    <p class="card-text">
+                        <strong>Tipo:</strong> {{ paquete.TipoPaquete }}<br>
+                        <strong>Inventario:</strong> {{ paquete.Inventario }}<br>
+                        <strong>Unidades Sobrantes:</strong> {{ paquete.UnidadesSobrantes }}<br>
+                        <strong>Paquetes Completos:</strong> {{ paquete.PaquetesCompletos }}<br>
+                        <strong>Precio Venta:</strong> C${{ paquete.PrecioVenta_Paq }}<br>
+                        <strong>Precio Compra:</strong> C${{ paquete.PrecioCompra_Paq }}
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{{ url_for('editar_paquete', id=paquete.Id_Paquete) }}" class="btn btn-warning btn-sm">Editar</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

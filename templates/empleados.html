@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center text-primary">Lista de Empleados</h1>
+
+    <!-- Cuadro de búsqueda -->
+    <form method="get" action="{{ url_for('ver_empleados') }}" class="row g-2 mb-4">
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="busqueda" placeholder="Buscar por Nombres, Apellidos o Región"
+                value="{{ busqueda }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+        {% if busqueda %}
+        <div class="col-auto">
+            <a href="{{ url_for('ver_empleados') }}" class="btn btn-secondary">Ver Todos</a>
+        </div>
+        {% endif %}
+    </form>
+
+    <!-- Botón agregar empleado -->
+    <div class="mb-3">
+        <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearEmpleadoModal">
+            Agregar Empleado
+        </a>
+        {% include 'crear_empleado.html' %}
+    </div>
+
+    <!-- Tabla de empleados -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover shadow-sm align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Edad</th>
+                    <th>Fecha de Contrato</th>
+                    <th>Dirección</th>
+                    <th>Región</th>
+                    <th>Supervisor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in empleados %}
+                <tr>
+                    <td>{{ emp.Nombres }}</td>
+                    <td>{{ emp.Apellidos }}</td>
+                    <td>{{ emp.FechaDeNacimiento }}</td>
+                    <td>{{ emp.Edad }}</td>
+                    <td>{{ emp.FechaDeContrato }}</td>
+                    <td>{{ emp.Direccion }}</td>
+                    <td>{{ emp.Region }}</td>
+                    <td>
+                        {% if emp.NombreSupervisor and emp.ApellidoSupervisor %}
+                        {{ emp.NombreSupervisor }} {{ emp.ApellidoSupervisor }}
+                        {% else %}
+                        Supervisor
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ url_for('editar_empleado', id=emp.Id_Empleado) }}"
+                                class="btn btn-sm btn-warning">Editar</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

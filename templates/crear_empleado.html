@@ -1,0 +1,59 @@
+<!-- Modal -->
+<div class="modal fade" id="crearEmpleadoModal" tabindex="-1" aria-labelledby="crearEmpleadoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-dark text-white text-center">
+                <h5 class="modal-title" id="crearEmpleadoLabel">Crear Empleado</h5>
+                <button type="button" class="btn-close white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="nombres" class="form-label">Nombres</label>
+                        <input type="text" name="nombres" id="nombres" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="apellidos" class="form-label">Apellidos</label>
+                        <input type="text" name="apellidos" id="apellidos" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fecha_contrato" class="form-label">Fecha de Contrato</label>
+                        <input type="date" name="fecha_contrato" id="fecha_contrato" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <input type="text" name="direccion" id="direccion" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="region" class="form-label">Región</label>
+                        <input type="text" name="region" id="region" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="supervisor" class="form-label">Supervisor</label>
+                        <select name="supervisor" id="supervisor" class="form-select">
+                            <option value="">Sin supervisor</option>
+                            {% for s in supervisores %}
+                                <option value="{{ s.Id_Empleado }}">{{ s.Nombres }} {{ s.Apellidos }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

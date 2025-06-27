@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .btn-info{
+        border: 0;
+        color: #fff;
+        background-color: rgb(13, 110, 253);
+    }
+    .btn-info:hover{
+        color: #fff;
+        background-color: rgb(8, 69, 160);
+    }
+</style>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center text-success">Detalles de Ventas</h1>
+
+    <!-- Formulario de búsqueda por ID Venta -->
+    <form method="get" action="{{ url_for('ver_detalles_ventas') }}" class="row row-cols-lg-auto g-2 align-items-center mb-4">
+        <!-- Input: Buscar por producto -->
+        <div class="col">
+            <input type="text" class="form-control" name="producto" placeholder="Buscar por producto"
+                value="{{ request.args.get('producto', '') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        </div>
+    
+        <!-- Input: Buscar por ID de compra -->
+        <div class="col">
+            <input type="number" class="form-control" name="id_venta" placeholder="Buscar por Compra"
+                value="{{ request.args.get('id_venta', '') }}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+
+        <!-- Botón: Ver Todos -->
+        {% if request.args.get('producto') or request.args.get('id_venta') %}
+        <div class="col">
+            <a href="{{ url_for('ver_detalles_ventas') }}" class="btn btn-secondary">Ver Todos</a>
+        </div>
+        {% endif %}
+    </form>
+
+    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3">
+        <!-- Botón para agregar nuevo detalle de venta -->
+        <div>
+            <a href="#" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearDetVentaModal">
+                Agregar Detalle de Venta
+            </a>
+            {% include 'crear_detalle_venta.html' %}
+        </div>
+        <form method="post" action="{{ url_for('crear_venta') }}">
+            <div>
+                <!-- Botón que abre modal de confirmación -->
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmarVentaModal">
+    Agregar Venta
+</button>
+
+<!-- Modal de confirmación simple -->
+<div class="modal fade" id="confirmarVentaModal" tabindex="-1" aria-labelledby="confirmarVentaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title" id="confirmarVentaLabel">Confirmar creación de Venta</h5>
+        <button type="button" class="btn-close white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>¿Deseas crear una nueva venta con la fecha actual?</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <form method="post" action="{{ url_for('crear_venta') }}">
+          <button type="submit" class="btn btn-primary">Sí, crear venta</button>
+        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+        </form>
+        <div class="ms-auto">
+            <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#VerVentaModal">
+                Ver Ventas
+            </a>
+            {% include 'ver_ventas.html' %}
+        </div>
+        
+        <div class="ms-auto">
+            {% if tiene_detalles %}
+                <a href="{{ url_for('ganancia_diaria') }}" class="btn btn-info">
+                    Ver Ganancia Diaria
+                </a>
+            {% else %}
+                <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalAdvertenciaDetalleVentas">
+                    Ver Ganancia Diaria
+                </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Tabla de detalles de ventas -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle shadow-sm">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>Venta</th>
+                    <th>Producto</th>
+                    <th>Paquetes</th>
+                    <th>Unidades</th>
+                    <th>Total Vendido</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dv in detalles_ventas %}
+                <tr>
+                    <td class="text-center">{{ dv.Id_Venta }}</td>
+                    <td>{{ dv.DescripcionPaquete }}</td>
+                    <td class="text-center">{{ dv.CantidadPaquetes }}</td>
+                    <td class="text-center">{{ dv.CantidadUnidades }}</td>
+                    <td class="text-center">{{ dv.CantidadVendidaTotal }}</td>
+                    <td class="text-end">C${{ dv.PrecioUnitario }}</td>
+                    <td class="text-end">C${{ dv.Subtotal }}</td>
+                    <td class="text-center">
+                        <a href="{{ url_for('editar_detalle_venta', id=dv.Id_DetalleVenta) }}" class="btn btn-sm btn-warning">Editar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Advertencia -->
+<div class="modal fade" id="modalAdvertenciaDetalleVentas" tabindex="-1" aria-labelledby="modalAdvertenciaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="modalAdvertenciaLabel">Atención</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p>No existen detalles de venta registrados. Necesitas tener al menos un detalle para ver la ganancia diaria.</p>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

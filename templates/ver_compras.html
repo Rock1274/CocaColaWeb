@@ -1,0 +1,55 @@
+<style>
+    .h5_Ver{
+        font-size: 30px;
+    }
+    .btn-close.white {
+        filter: invert(1) grayscale(1) brightness(2);
+    }
+</style>
+
+<div class="container mt-5">
+
+    <div class="modal fade" id="VerCompraModal" tabindex="-1" aria-labelledby="VerCompraLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title mx-auto h5_Ver">Listado de Compras</h5>
+                    <button type="button" class="btn-close white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3 d-flex justify-content-between">
+                        <form method="post" action="{{ url_for('crear_compra') }}">
+                            <button type="submit" class="btn btn-success">Crear Compra</button>
+                        </form>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped shadow-sm">
+                            <thead class="table-dark text-center">
+                                <tr>
+                                    <th>Compra</th>
+                                    <th>Fecha de Compra</th>
+                                    <th>Proveedor</th>
+                                    <th>Total Factura</th> <!-- Nueva columna -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for compra in compras %}
+                                <tr class="text-center">
+                                    <td>{{ compra.Id_Compra }}</td>
+                                    <td>{{ compra.FechaDeCompra }}</td>
+                                    <td>{{ compra.CompanyName }}</td>
+                                    <td>C${{ '%.2f' | format(compra.TotalFactura) }}</td> <!-- Mostrar total -->
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
