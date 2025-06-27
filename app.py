@@ -85,6 +85,16 @@ def login():
             flash('Nombre de usuario o contraseña incorrectos')
     return render_template('login.html')
 
+@app.route('/pingdb')
+def pingdb():
+    try:
+        conn = get_db_connection()
+        conn.close()
+        return "✅ Conexión exitosa con SQL Server"
+    except Exception as e:
+        return f"❌ Error conectando a la base de datos: {e}"
+
+
 # Ruta: Logout
 @app.route('/logout')
 def logout():
