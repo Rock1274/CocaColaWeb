@@ -151,7 +151,7 @@ def ver_paquetes():
         imagen = request.files.get('imagen')
         if imagen and archivo_permitido(imagen.filename):
             # Limpia el nombre del archivo (quita /, \ y espacios)
-            nombre_archivo = f"{descripcion.replace('/', '_').replace('\\', '_')}.png"
+            nombre_archivo = f"{descripcion.replace('/', '_')}.png"
             ruta_imagen = os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo)
             imagen.save(ruta_imagen)
 
