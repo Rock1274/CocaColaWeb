@@ -197,7 +197,7 @@ def editar_paquete(id):
                 flash('❌ Formato de imagen no permitido. Usa: .png, .jpg, .jpeg o .gif', 'danger')
                 return redirect(url_for('editar_paquete', id=id))
     
-            nombre_archivo = f"{descripcion.replace('/', '_').replace('\\', '_')}.png"
+            nombre_archivo = f"{descripcion.replace('/', '_')}.png"
             ruta_imagen = os.path.join(app.config['UPLOAD_FOLDER'], nombre_archivo)
             imagen.save(ruta_imagen)
         
