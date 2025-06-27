@@ -26,14 +26,23 @@ def archivo_permitido(nombre_archivo):
 
 
 def get_db_connection():
-    conn = pyodbc.connect(
-        'DRIVER={ODBC Driver 17 for SQL Server};'
-        f'SERVER={os.environ.get("AZURE_SQL_SERVER")};'
-        f'DATABASE={os.environ.get("AZURE_SQL_DB")};'
-        f'UID={os.environ.get("AZURE_SQL_USER")};'
-        f'PWD={os.environ.get("AZURE_SQL_PASS")}'
+    server = os.environ.get("AZURE_SQL_SERVER")
+    database = os.environ.get("AZURE_SQL_DB")
+    username = os.environ.get("AZURE_SQL_USER")
+    password = os.environ.get("AZURE_SQL_PASS")
+
+    conn_str = (
+        "DRIVER={ODBC Driver 17 for SQL Server};"
+        f"SERVER={server};"
+        f"DATABASE={database};"
+        f"UID={username};"
+        f"PWD={password};"
+        "Encrypt=yes;"
+        "TrustServerCertificate=no;"
+        "Connection Timeout=30;"
     )
-    return conn
+
+    return pyodbc.connect(conn_str)
 
 def login_requerido(f):
     @wraps(f)
@@ -766,4 +775,5 @@ def calcular_ganancia(id_venta):
 #Ejecucion
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
