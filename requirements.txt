@@ -2,3 +2,8 @@ Flask
 pyodbc
 python-dotenv
 gunicorn
+base64
+os
+datetime
+werkzeug.utils
+wraps
