@@ -610,7 +610,7 @@ def crear_compra():
     proveedor_id = 1  # o dinámico si lo necesitás
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Compras (FechaDeCompra, Id_Proveedor) VALUES (GETDATE(), ?)", (proveedor_id,))
+    cursor.execute("INSERT INTO Compras (FechaDeCompra, Id_Company) VALUES (GETDATE(), ?)", (proveedor_id,))
     conn.commit()
     conn.close()
     return redirect(url_for('ver_detalles_compras'))
