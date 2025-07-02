@@ -67,7 +67,7 @@ def calcular_edad(fecha_nacimiento):
 #Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    error_login = False  
+    error_login = False
     if request.method == 'POST':
         nusuario = request.form['nusuario']
         contrasena = request.form['contrasena']
@@ -89,7 +89,7 @@ def login():
         else:
             error_login = True  # Activar modal
             flash('Nombre de usuario o contraseña incorrectos')
-    return render_template('login.html')
+    return render_template('login.html',error_login=error_login)
 
 @app.route('/pingdb')
 def pingdb():
