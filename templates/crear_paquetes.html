@@ -52,7 +52,11 @@
 
                         <div class="mb-3">
                             <label for="imagen" class="form-label">Imagen del Producto</label>
-                            <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*">
+                            <input type="file" class="form-control" name="imagen" id="imagen" accept="image/*" onchange="mostrarVistaPrevia(this)">>
+                        </div>
+                         <!-- Vista previa -->
+                        <div class="mb-3 text-center">
+                            <img id="previewImagen" src="#" alt="Vista previa" class="img-fluid rounded shadow" style="max-height: 200px; display: none;">
                         </div>
 
 
@@ -66,3 +70,19 @@
         </div>
     </div>
 </div>
+<script>
+function mostrarVistaPrevia(input) {
+    const preview = document.getElementById('previewImagen');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.src = '#';
+        preview.style.display = 'none';
+    }
+}
+</script>

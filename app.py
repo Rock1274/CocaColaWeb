@@ -223,9 +223,10 @@ def editar_paquete(id):
     # Obtener paquetes para el combo
     cursor.execute('SELECT * FROM Paquete WHERE Id_Paquete = ?', (id,))
     paquete = cursor.fetchone() 
+    archivos_disponibles = set(os.listdir(app.config['UPLOAD_FOLDER']))
 
     conn.close()
-    return render_template('editar_paquetes.html', paquete=paquete)
+    return render_template('editar_paquetes.html', paquete=paquete, lookup_files=archivos_disponibles)
 
 
 
