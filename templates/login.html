@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="fade-input recuerdame">
-                    <input type="checkbox" name="checkbox" id="Recuerdame">
+                    <input type="checkbox" name="remember" id="Recuerdame">
                     <label for="Recuerdame">Recuérdame</label>
                 </div>
 
@@ -34,7 +34,24 @@
             </form>
         </div>
     </div>
-
+      <!-- Modal de Error -->
+    <div class="modal fade" id="loginErrorModal" tabindex="-1" aria-labelledby="loginErrorLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+          <div class="modal-header bg-danger text-white">
+            <h5 class="modal-title" id="loginErrorLabel">Error de Inicio de Sesión</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body text-center">
+            <i class="fa-solid fa-circle-exclamation fa-2x text-danger mb-3"></i><br>
+            Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <script>
         // Mostrar/ocultar contraseña
         const togglePassword = document.getElementById('togglePassword');
@@ -44,6 +61,16 @@
             passwordInput.setAttribute('type', type);
             togglePassword.classList.toggle('fa-eye');
             togglePassword.classList.toggle('fa-eye-slash');
+        });
+        // Mostrar modal si hubo error
+        window.addEventListener('DOMContentLoaded', () => {
+            const showErrorStr = "{{ 'true' if error_login else 'false' }}";
+            const showError = showErrorStr === 'true';
+
+            if (showError) {
+                const errorModal = new bootstrap.Modal(document.getElementById('loginErrorModal'));
+                errorModal.show();
+            }
         });
     </script>
 </body>

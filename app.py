@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash,make_response
 import pyodbc
 import base64
 from functools import wraps
 import os
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from datetime import timedelta
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -12,6 +13,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'clave_super_secreta_1234'
+app.permanent_session_lifetime = timedelta(days=30)
 
 # Carpeta para subir imágenes
 UPLOAD_FOLDER = os.path.join('static', 'Paquetes')
@@ -65,9 +67,11 @@ def calcular_edad(fecha_nacimiento):
 #Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    error_login = False  
     if request.method == 'POST':
         nusuario = request.form['nusuario']
         contrasena = request.form['contrasena']
+        recordar = 'remember' in request.form
         contrasena_codificada = base64.b64encode(contrasena.encode('utf-16le')).decode()
 
         conn = get_db_connection()
@@ -80,8 +84,10 @@ def login():
         if user:
             session['usuario'] = user[1]
             session['tipo'] = user[4]
+            session.permanent = recordar  # Si recordar está marcado, la sesión será permanente
             return redirect(url_for('index'))
         else:
+            error_login = True  # Activar modal
             flash('Nombre de usuario o contraseña incorrectos')
     return render_template('login.html')
 
