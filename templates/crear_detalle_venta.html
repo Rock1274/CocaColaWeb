@@ -38,10 +38,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="unidades_finales" class="form-label">Unidades</label>
+                            <label for="unidades_finales" class="form-label">Unidades Finales</label>
                             <input type="number" class="form-control" id="unidades_finales" name="unidades_finales"
                                 min="0" max="" required>
                             <small class="form-text text-muted" id="inventario-und"></small>
+                            <div class="invalid-feedback" id="unidades-error"></div>
                         </div>
 
                         <div class="modal-footer">
@@ -61,11 +62,96 @@
         var inventario_paqt = selected.getAttribute('data-paquetes');
         var inventario_unid = selected.getAttribute('data-unidades');
         var inventario = selected.getAttribute('data-inventario');
+        var tipoPaquete = selected.getAttribute('data-tipo');
+        
         document.getElementById('inventario-actual').textContent = 'Inventario: ' + inventario;
         document.getElementById('inventario-paq').textContent = 'Inventario en paquetes: ' + inventario_paqt;
         document.getElementById('inventario-und').textContent = 'Inventario en unidades: ' + inventario_unid;
+        
         // actualizar el atributo max del input de paquetes e inventario
         document.getElementById('paquetes_finales').max = inventario_paqt;
         document.getElementById('unidades_finales').max = inventario_unid;
+        
+        // Validar unidades después de cambiar el paquete
+        validateUnidades();
     });
+
+    // Función de validación en tiempo real de unidades sobrantes
+function initializeUnidadesValidation() {
+    const paqueteSelect = document.getElementById('paquete_id');
+    const unidadesInput = document.getElementById('unidades_finales');
+    const unidadesError = document.getElementById('unidades-error');
+    const submitButton = document.querySelector('button[type="submit"]');
+
+    // Si no existen los elementos, salir
+    if (!paqueteSelect || !unidadesInput || !unidadesError || !submitButton) {
+        return;
+    }
+
+    function validateUnidades() {
+        // Obtener el tipo de paquete del producto seleccionado
+        const selectedOption = paqueteSelect.options[paqueteSelect.selectedIndex];
+        const tipoPaquete = selectedOption ? parseInt(selectedOption.getAttribute('data-tipo')) || 0 : 0;
+        const unidades = parseInt(unidadesInput.value) || 0;
+        
+        // Actualizar el atributo max del input
+        unidadesInput.max = tipoPaquete;
+        
+        if (unidades > tipoPaquete) {
+            // Actualizar el mensaje de error dinámicamente
+            unidadesError.textContent = `No pueden sobrar ${unidades} unidades en un paquete de ${tipoPaquete} unidades`;;
+            unidadesInput.classList.add('is-invalid');
+            submitButton.disabled = true;
+            return false;
+        } else {
+            // Restaurar el mensaje original
+            unidadesError.textContent = '';
+            unidadesInput.classList.remove('is-invalid');
+            submitButton.disabled = false;
+            return true;
+        }
+    }
+
+    // Remover event listeners anteriores para evitar duplicados
+    paqueteSelect.removeEventListener('change', validateUnidades);
+    unidadesInput.removeEventListener('input', validateUnidades);
+    
+    // Agregar event listeners
+    paqueteSelect.addEventListener('change', validateUnidades);
+    unidadesInput.addEventListener('input', validateUnidades);
+    
+    // Validar al enviar el formulario
+    const form = document.querySelector('form');
+    if (form) {
+        // Remover event listener anterior
+        form.removeEventListener('submit', formSubmitHandler);
+        
+        // Agregar nuevo event listener
+        form.addEventListener('submit', formSubmitHandler);
+    }
+    
+    // Validar al cargar la página
+    validateUnidades();
+}
+
+// Handler para el submit del formulario
+function formSubmitHandler(e) {
+    const paqueteSelect = document.getElementById('paquete_id');
+    const unidadesInput = document.getElementById('unidades_finales');
+    
+    if (!paqueteSelect || !unidadesInput) return;
+    
+    const selectedOption = paqueteSelect.options[paqueteSelect.selectedIndex];
+    const tipoPaquete = selectedOption ? parseInt(selectedOption.getAttribute('data-tipo')) || 0 : 0;
+    const unidades = parseInt(unidadesInput.value) || 0;
+    
+    if (unidades > tipoPaquete) {
+        e.preventDefault();
+        alert('Por favor, corrige los errores antes de enviar el formulario.');
+    }
+}
+
+// Inicializar en DOMContentLoaded (carga inicial)
+document.addEventListener('DOMContentLoaded', initializeUnidadesValidation);
+
 </script>

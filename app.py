@@ -314,7 +314,7 @@ def ver_detalles_ventas():
 
 
     # Cargar combos: Paquetes y ventas
-    cursor.execute('SELECT Id_Paquete, Descripcion, PaquetesCompletos, UnidadesSobrantes, Inventario FROM Paquete')
+    cursor.execute('SELECT Id_Paquete, Descripcion, PaquetesCompletos, UnidadesSobrantes, Inventario, TipoPaquete FROM Paquete')
     paquetes = cursor.fetchall()
 
     cursor.execute('SELECT MAX(Id_Venta) FROM Venta')
