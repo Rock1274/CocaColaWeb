@@ -19,8 +19,11 @@
                             <select class="form-select" id="paquete_id" name="paquete_id" required>
                                 <option selected disabled>Seleccione un producto</option>
                                 {% for paquete in paquetes %}
-                                <option value="{{ paquete.Id_Paquete }}" data-inventario="{{ paquete.Inventario }}" 
-                                    data-paquetes="{{ paquete.PaquetesCompletos }}" data-unidades="{{ paquete.UnidadesSobrantes }}">
+                                <option value="{{ paquete.Id_Paquete }}" 
+                                    data-inventario="{{ paquete.Inventario }}" 
+                                    data-paquetes="{{ paquete.PaquetesCompletos }}" 
+                                    data-unidades="{{ paquete.UnidadesSobrantes }}"
+                                    data-tipo="{{ paquete.TipoPaquete }}">
                                     {{ paquete.Descripcion }}
                                 </option>
                                 {% endfor %}
